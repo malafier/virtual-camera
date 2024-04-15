@@ -25,5 +25,5 @@ if __name__ == "__main__":
                 camera.move(event.key)
                 print(camera)
 
-            scene.draw(window, camera)
+                scene.draw(window, camera)
     pg.quit()

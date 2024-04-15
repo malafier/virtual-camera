@@ -9,11 +9,13 @@ class Camera:
     def __init__(self):
         self.x, self.y, self.z = 0, 0, 0
         self.rot_x, self.rot_y, self.rot_z = 0, 0, 0
-        self.vp_distance = 20
-        self.fov_h = 90
-        self.fov_v = self.fov_h * (W_HEIGHT / W_WIDTH)
-        self.near_plane = 1
-        self.far_plane = 1000
+        self.vp_distance = 2
+
+        self.far_plane = 500
+        self.vp_top = 1
+        self.vp_bottom = -self.vp_top
+        self.vp_right = 1
+        self.vp_left = -self.vp_right
 
     def move(self, event_key):
         if event_key == pg.K_LEFT:
