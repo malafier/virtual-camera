@@ -53,12 +53,7 @@ class Camera:
         #         self.far_plane = self.near_plane * 1000
 
     def matrix(self):
-        cam_translation = np.array([
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [self.x, self.y, self.z, 1]
-        ])
+        cam_translation = translation(self.x, self.y, self.z)
 
         rotation = rotation_x(self.rot_x) @ rotation_y(self.rot_y) @ rotation_z(self.rot_z)
         forward = np.array([0, 0, 1, 1]) @ rotation

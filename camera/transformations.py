@@ -3,8 +3,8 @@ import numpy as np
 from camera.config import *
 
 
-def translate(point, dx, dy, dz):
-    return point @ np.array([
+def translation(dx, dy, dz):
+    return np.array([
         [1, 0, 0, 0],
         [0, 1, 0, 0],
         [0, 0, 1, 0],
