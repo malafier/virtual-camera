@@ -1,5 +1,6 @@
 import numpy as np
-from config import *
+
+from camera.config import *
 
 
 def translate(point, dx, dy, dz):
@@ -11,9 +12,9 @@ def translate(point, dx, dy, dz):
     ])
 
 
-def rotate_x(point, angle):
+def rotation_x(angle):
     angle *= ROTATION_QUANTUM
-    return point @ np.array([
+    return np.array([
         [1, 0, 0, 0],
         [0, np.cos(angle), np.sin(angle), 0],
         [0, -np.sin(angle), np.cos(angle), 0],
@@ -21,9 +22,9 @@ def rotate_x(point, angle):
     ])
 
 
-def rotate_y(point, angle):
+def rotation_y(angle):
     angle *= ROTATION_QUANTUM
-    return point @ np.array([
+    return np.array([
         [np.cos(angle), 0, -np.sin(angle), 0],
         [0, 1, 0, 0],
         [np.sin(angle), 0, np.cos(angle), 0],
@@ -31,9 +32,9 @@ def rotate_y(point, angle):
     ])
 
 
-def rotate_z(point, angle):
+def rotation_z(angle):
     angle *= ROTATION_QUANTUM
-    return point @ np.array([
+    return np.array([
         [np.cos(angle), np.sin(angle), 0, 0],
         [-np.sin(angle), np.cos(angle), 0, 0],
         [0, 0, 1, 0],
