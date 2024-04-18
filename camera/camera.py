@@ -44,13 +44,11 @@ class Camera:
         elif event_key == pg.K_e:
             self.rot_z = (self.rot_z + self.R_QUANTUM) % 12
 
-        # elif event_key == pg.K_z:
-        #     if pg.key.get_mods() & pg.KMOD_SHIFT:
-        #         self.near_plane = min(10.0, self.near_plane + 1.0)
-        #         self.far_plane = self.near_plane * 1000
-        #     else:
-        #         self.near_plane = max(0.1, self.near_plane - 1.0)
-        #         self.far_plane = self.near_plane * 1000
+        elif event_key == pg.K_z:
+            if pg.key.get_mods() & pg.KMOD_SHIFT:
+                self.vp_top = min(2.0, self.vp_top + 0.2)
+            else:
+                self.vp_top = max(0.4, self.vp_top - 0.2)
 
     def matrix(self):
         cam_translation = translation(self.x, self.y, self.z)
@@ -73,4 +71,4 @@ class Camera:
         return cam_translation @ cam_rotation
 
     def __str__(self):
-        return f"Camera: ({self.x}, {self.y}, {self.z}), ({self.rot_x}, {self.rot_y}, {self.rot_z})"
+        return f"Camera: ({self.x}, {self.y}, {self.z}), ({self.rot_x}, {self.rot_y}, {self.rot_z}), {self.vp_top}"
