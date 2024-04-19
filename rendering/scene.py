@@ -1,8 +1,8 @@
 import pygame as pg
 
-from camera.camera import Camera
-from camera.projection import Projection
-from camera.transformations import *
+from rendering.camera import Camera
+from rendering.projection import Projection
+from rendering.transformations import *
 
 
 class Scene:

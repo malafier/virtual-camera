@@ -1,7 +1,7 @@
 import os
 
-from camera.camera import *
-from camera.scene import Scene
+from rendering.camera import *
+from rendering.scene import Scene
 
 # Set up the window
 window = pg.display.set_mode((W_WIDTH, W_HEIGHT), pg.RESIZABLE)
@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
             if event.type == pg.KEYDOWN:
                 camera.move(event.key)
-                # print(camera)
+                print(camera)
 
-            scene.draw(window)
+        scene.draw(window)
     pg.quit()

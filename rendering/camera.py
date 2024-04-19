@@ -1,6 +1,6 @@
 import pygame as pg
 
-from camera.transformations import *
+from rendering.transformations import *
 
 
 class Camera:
@@ -8,8 +8,8 @@ class Camera:
     R_QUANTUM = 1  # == PI/6
 
     def __init__(self):
-        self.x, self.y, self.z = 0, -2, 10
-        self.rot_x, self.rot_y, self.rot_z = -1, 0, 0
+        self.x, self.y, self.z = 3, -2, 10
+        self.rot_x, self.rot_y, self.rot_z = 11, 0, 0
 
         self.near_plane = 0.1
         self.far_plane = self.near_plane * 1000
@@ -46,9 +46,9 @@ class Camera:
 
         elif event_key == pg.K_z:
             if pg.key.get_mods() & pg.KMOD_SHIFT:
-                self.vp_top = min(2.0, self.vp_top + 0.2)
+                self.vp_top = min(3.0, self.vp_top + 0.2)
             else:
-                self.vp_top = max(0.4, self.vp_top - 0.2)
+                self.vp_top = max(0.2, self.vp_top - 0.2)
 
     def matrix(self):
         cam_translation = translation(self.x, self.y, self.z)

@@ -1,5 +1,5 @@
 import numpy as np
-from camera.config import *
+from rendering.config import *
 
 
 class Projection:
