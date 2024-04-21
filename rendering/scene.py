@@ -41,5 +41,5 @@ class Scene:
         for vertex in vertices:
             if np.any(vertex == W_WIDTH) or np.any(vertex == W_HEIGHT):
                 continue
-            pg.draw.circle(window, Colour.RED.value, vertex, 5)
+            pg.draw.circle(window, Colour.RED.value, vertex, 4)
         pg.display.update()
