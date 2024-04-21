@@ -1,11 +1,12 @@
 import numpy as np
+
 from rendering.config import *
 
 
 class Projection:
     def __init__(self, cam):
         near = cam.near_plane
-        far = cam.far_plane
+        far = near * 1000
 
         top = cam.vp_top
         bottom = -top
@@ -20,8 +21,8 @@ class Projection:
         ])
 
         self.scaling_matrix = np.array([
-            [W_WIDTH, 0, 0, 0],
-            [0, -W_HEIGHT, 0, 0],
+            [H_WIDTH, 0, 0, 0],
+            [0, -H_HEIGHT, 0, 0],
             [0, 0, 1, 0],
-            [W_WIDTH, W_HEIGHT, 0, 1]
+            [H_WIDTH, H_HEIGHT, 0, 1]
         ])

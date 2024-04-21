@@ -7,8 +7,7 @@ from rendering.transformations import *
 
 class Scene:
     def __init__(self, camera: Camera):
-        self.vertices = None
-        self.edges = []
+        self.vertices, self.edges = [], []
         self.load_from_file("data/nodes.txt")
         self.camera: Camera = camera
 
@@ -31,17 +30,16 @@ class Scene:
         vertices = self.vertices @ self.camera.matrix()
         vertices = vertices @ projection.projection_matrix
         vertices /= vertices[:, -1].reshape(-1, 1)
-        vertices[(vertices > 2) | (vertices < -2)] = 0
+        # vertices[(vertices > 2) | (vertices < -2)] = 0
         vertices = vertices @ projection.scaling_matrix
         vertices = vertices[:, :2]
 
         for edge in self.edges:
-            if np.any(vertices[edge[0]] == W_WIDTH) or np.any(vertices[edge[0]] == W_HEIGHT) \
-                    or np.any(vertices[edge[1]] == W_WIDTH) or np.any(vertices[edge[1]] == W_HEIGHT):
+            if np.any(edge == H_WIDTH) or np.any(edge == H_HEIGHT):
                 continue
             pg.draw.line(window, Colour.WHITE.value, vertices[edge[0]], vertices[edge[1]])
         for vertex in vertices:
-            if np.any(vertex == W_WIDTH) or np.any(vertex == W_HEIGHT):
+            if np.any(vertex == H_WIDTH) or np.any(vertex == H_HEIGHT):
                 continue
             pg.draw.circle(window, Colour.RED.value, vertex, 5)
         pg.display.update()

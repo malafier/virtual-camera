@@ -1,4 +1,5 @@
 from enum import Enum
+
 from numpy import pi
 
 
@@ -12,11 +13,10 @@ class Colour(Enum):
     CYAN = (0, 255, 255)
     MAGENTA = (255, 0, 255)
 
-    def __str__(self):
-        return f"Colour({self.value})"
-
 
 ROTATION_QUANTUM = pi / 6
 
 W_HEIGHT = 720
 W_WIDTH = 1280
+H_HEIGHT = W_HEIGHT // 2
+H_WIDTH = W_WIDTH // 2
