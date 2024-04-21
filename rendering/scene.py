@@ -39,7 +39,7 @@ class Scene:
                 continue
             pg.draw.line(window, Colour.WHITE.value, vertices[edge[0]], vertices[edge[1]])
         for vertex in vertices:
-            if np.any(vertex == H_WIDTH) or np.any(vertex == H_HEIGHT):
+            if np.any(vertex == W_WIDTH) or np.any(vertex == W_HEIGHT):
                 continue
             pg.draw.circle(window, Colour.RED.value, vertex, 5)
         pg.display.update()
