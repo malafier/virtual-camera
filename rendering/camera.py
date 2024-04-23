@@ -42,9 +42,9 @@ class Camera:
         elif event_key == pg.K_s:
             self.rot_x = (self.rot_x + R_QUANTUM) % 12
         elif event_key == pg.K_q:
-            self.rot_z = (self.rot_z + R_QUANTUM) % 12
-        elif event_key == pg.K_e:
             self.rot_z = (self.rot_z - R_QUANTUM) % 12
+        elif event_key == pg.K_e:
+            self.rot_z = (self.rot_z + R_QUANTUM) % 12
 
         elif event_key == pg.K_z:
             if pg.key.get_mods() & pg.KMOD_SHIFT:
