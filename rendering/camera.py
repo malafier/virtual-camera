@@ -2,13 +2,13 @@ import pygame as pg
 
 from rendering.transformations import *
 
-SHIFT_QUANTUM = 5
+SHIFT_QUANTUM = 6
 R_QUANTUM = 1  # == PI/6
 
 
 class Camera:
     def __init__(self):
-        self.position = 5, 5, -5, 1
+        self.position = 5, 5, -8, 1
         self.rot_x, self.rot_y, self.rot_z = 0, 0, 0
         self.forward = np.array([0, 0, 1, 1])
         self.up = np.array([0, 1, 0, 1])
