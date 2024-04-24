@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
             if event.type == pg.KEYDOWN:
                 camera.move(event.key)
-                print(camera)
+                # print(camera)
 
         scene.draw(window)
     pg.quit()
