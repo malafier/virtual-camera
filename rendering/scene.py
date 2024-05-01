@@ -1,16 +1,11 @@
+import random
+
 import pygame as pg
 
 from rendering.camera import Camera
 from rendering.projection import Projection
 from rendering.transformations import *
-
-
-def arr_to_rgb(arr: list) -> tuple:
-    pivot = len(arr) // 2
-    r = (int(sum(arr[:pivot])) * 100) % 256
-    g = (int(arr[pivot]) * 100) % 256
-    b = (int(sum(arr[pivot + 1:])) * 100) % 256
-    return r, g, b
+from rendering.painter import painter_algorithm, Polygon
 
 
 class Scene:
@@ -36,16 +31,27 @@ class Scene:
         projection = Projection(self.camera)
 
         vertices = self.vertices @ self.camera.matrix()
-        vertices = vertices @ projection.projection_matrix
-        vertices[:, -1] = np.where(vertices[:, -1] == 0, 1, vertices[:, -1])
-        vertices /= vertices[:, -1].reshape(-1, 1)
+        # vertices = vertices @ projection.projection_matrix
+        # vertices[:, -1] = np.where(vertices[:, -1] == 0, 1, vertices[:, -1])
+        # vertices /= vertices[:, -1].reshape(-1, 1)
         # vertices[(vertices > 2) | (vertices < -2)] = 0
-        vertices = vertices @ projection.scaling_matrix
-        vertices = vertices[:, :2]
+        # vertices = vertices @ projection.scaling_matrix
+        # vertices = vertices[:, :2]
 
+        polygons = []
         for face in self.faces:
-            polygon = vertices[face]
-            if np.any(polygon == H_WIDTH) or np.any(polygon == H_HEIGHT):
-                continue
-            pg.draw.polygon(window, arr_to_rgb(face), polygon)
+            polygons.append(Polygon(face, vertices[face]))
+        polygons = painter_algorithm(polygons)
+
+        for poly in polygons:
+            polygon = np.array(poly.vertices)
+            polygon = polygon @ projection.projection_matrix
+            polygon[:, -1] = np.where(polygon[:, -1] == 0, 1, polygon[:, -1])
+            polygon /= polygon[:, -1].reshape(-1, 1)
+            polygon = polygon @ projection.scaling_matrix
+            polygon = polygon[:, :2]
+
+            # if np.any(polygon == H_WIDTH) or np.any(polygon == H_HEIGHT):
+            #     continue
+            pg.draw.polygon(window, poly.rgb, polygon)
         pg.display.update()
