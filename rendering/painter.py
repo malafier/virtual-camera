@@ -52,7 +52,7 @@ def obscures(p: Polygon, q: Polygon) -> bool:
     # P is contained wholly in the back half-space of Q
     all_in_back = True
     for i in range(len(p.vertices)):
-        if point_position_by_plane(p, i, q) >= 0.0:
+        if point_position_by_plane(p, i, q) > 0.0:
             all_in_back = False
             break
     if all_in_back:
@@ -61,7 +61,7 @@ def obscures(p: Polygon, q: Polygon) -> bool:
     # Q is contained wholly in the front half-space of P
     all_in_front = True
     for i in range(len(q.vertices)):
-        if point_position_by_plane(q, i, p) <= 0.0:
+        if point_position_by_plane(q, i, p) < 0.0:
             all_in_front = False
             break
     if all_in_front:
@@ -79,19 +79,14 @@ def painter_algorithm(polygons: List[Polygon]):
     draw_order = []
 
     for polygon in sorted_polygons:
-        draw_order.append(polygon)
-        # i = len(draw_order) - 1
-        # while i > 0 and obscures(draw_order[i-1], draw_order[i]):
-        #     draw_order[i], draw_order[i - 1] = draw_order[i - 1], draw_order[i]
-        #     i -= 1
-
         not_obstructed = True
-        for other_polygon in draw_order:
-            if obscures(polygon, other_polygon):
-                i = draw_order.index(other_polygon)
-                draw_order = draw_order[:i] + [polygon] + draw_order[i:]
-                not_obstructed = False
-                break
+        i = len(draw_order) - 1
+        while i > 0 and obscures(polygon, draw_order[i]):
+            not_obstructed = False
+            i -= 1
+
         if not_obstructed:
             draw_order.append(polygon)
+        else:
+            draw_order = draw_order[:i] + [polygon] + draw_order[i:]
     return draw_order
