@@ -20,12 +20,14 @@ class Polygon:
         return np.sqrt(np.sum(centroid ** 2))
 
     def plane_normal(self):
-        v1 = self.vertices[0, :3]
-        v2 = self.vertices[1, :3]
-        v3 = self.vertices[2, :3]
-        normal = np.cross(v2 - v1, v3 - v1)
-        if np.dot(normal, v1) < 0.0:
+        A = self.vertices[0, :3]
+        B = self.vertices[1, :3]
+        C = self.vertices[2, :3]
+        normal = np.cross(B - A, C - A)
+        print("n before: ", normal)
+        if np.dot(normal, -A) < 0.0:
             normal = -normal
+        print("n after: ", normal)
         return normal
 
 
@@ -33,10 +35,11 @@ class Polygon:
 def point_position_by_plane(point_plane: Polygon, i, normal_plane: Polygon) -> bool:
     normal = normal_plane.plane_normal()
     vec = point_plane.vertices[i, :3] - normal_plane.vertices[0, :3]
+    print("vec: ", vec)
     return np.dot(normal, vec)
 
 
-def obscures(p: Polygon, q: Polygon) -> bool:
+def p_obstructs_q(p: Polygon, q: Polygon) -> bool:
     # Extreme screen values of x of two faces do not overlap
     self_x_min, self_x_max = np.min(p.vertices[:, 0]), np.max(p.vertices[:, 0])
     other_x_min, other_x_max = np.min(q.vertices[:, 0]), np.max(q.vertices[:, 0])
@@ -52,7 +55,8 @@ def obscures(p: Polygon, q: Polygon) -> bool:
     # P is contained wholly in the back half-space of Q
     all_in_back = True
     for i in range(len(p.vertices)):
-        if point_position_by_plane(p, i, q) > 0.0:
+        print("P in back", i, ": ", point_position_by_plane(p, i, q))
+        if not point_position_by_plane(p, i, q) < 0.0:
             all_in_back = False
             break
     if all_in_back:
@@ -61,7 +65,8 @@ def obscures(p: Polygon, q: Polygon) -> bool:
     # Q is contained wholly in the front half-space of P
     all_in_front = True
     for i in range(len(q.vertices)):
-        if point_position_by_plane(q, i, p) < 0.0:
+        print("Q in front", i, ": ", point_position_by_plane(q, i, p))
+        if not point_position_by_plane(q, i, p) > 0.0:
             all_in_front = False
             break
     if all_in_front:
@@ -70,23 +75,35 @@ def obscures(p: Polygon, q: Polygon) -> bool:
     return True
 
 
-def sort_by_z(polygons):
+def sort_by_distance(polygons):
     return sorted(polygons, key=lambda x: x.distance(), reverse=True)
 
 
 def painter_algorithm(polygons: List[Polygon]):
-    sorted_polygons = sort_by_z(polygons)
-    draw_order = []
+    sorted_polygons = sort_by_distance(polygons)
+    print("===============")
+    print("Polygons: ")
+    print(sorted_polygons[0].rgb, sorted_polygons[0].vertices)
+    print(sorted_polygons[1].rgb, sorted_polygons[1].vertices)
 
-    for polygon in sorted_polygons:
-        not_obstructed = True
-        i = len(draw_order) - 1
-        while i > 0 and obscures(polygon, draw_order[i]):
-            not_obstructed = False
-            i -= 1
+    for i in range(len(sorted_polygons) - 1, 0, -1):
+        j = i - 1
+        while j >= 0 and p_obstructs_q(sorted_polygons[j], sorted_polygons[j+1]):
+            sorted_polygons[j], sorted_polygons[j+1] = sorted_polygons[j+1], sorted_polygons[j]
+            j -= 1
+    print("Polygons: ")
+    print(sorted_polygons[0].rgb, sorted_polygons[0].vertices)
+    print(sorted_polygons[1].rgb, sorted_polygons[1].vertices)
 
-        if not_obstructed:
-            draw_order.append(polygon)
-        else:
-            draw_order = draw_order[:i] + [polygon] + draw_order[i:]
-    return draw_order
+    # for polygon in sorted_polygons:
+    #     not_obstructed = True
+    #     i = len(draw_order) - 1
+    #     while i > 0 and p_obstructs_q(polygon, draw_order[i]):
+    #         not_obstructed = False
+    #         i -= 1
+
+    #     if not_obstructed:
+    #         draw_order.append(polygon)
+    #     else:
+    #         draw_order = draw_order[:i] + [polygon] + draw_order[i:]
+    return sorted_polygons

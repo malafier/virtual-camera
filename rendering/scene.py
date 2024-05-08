@@ -1,17 +1,15 @@
-import random
-
 import pygame as pg
 
 from rendering.camera import Camera
+from rendering.painter import painter_algorithm, Polygon
 from rendering.projection import Projection
 from rendering.transformations import *
-from rendering.painter import painter_algorithm, Polygon
 
 
 class Scene:
     def __init__(self, camera: Camera):
         self.vertices, self.faces = [], []
-        self.load_from_file("data/nodes.txt")
+        self.load_from_file("data/planes.txt")
         self.camera: Camera = camera
 
     def load_from_file(self, filename):
@@ -31,12 +29,6 @@ class Scene:
         projection = Projection(self.camera)
 
         vertices = self.vertices @ self.camera.matrix()
-        # vertices = vertices @ projection.projection_matrix
-        # vertices[:, -1] = np.where(vertices[:, -1] == 0, 1, vertices[:, -1])
-        # vertices /= vertices[:, -1].reshape(-1, 1)
-        # vertices[(vertices > 2) | (vertices < -2)] = 0
-        # vertices = vertices @ projection.scaling_matrix
-        # vertices = vertices[:, :2]
 
         polygons = []
         for face in self.faces:
@@ -51,7 +43,5 @@ class Scene:
             polygon = polygon @ projection.scaling_matrix
             polygon = polygon[:, :2]
 
-            # if np.any(polygon == H_WIDTH) or np.any(polygon == H_HEIGHT):
-            #     continue
             pg.draw.polygon(window, poly.rgb, polygon)
         pg.display.update()
