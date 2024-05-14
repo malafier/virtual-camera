@@ -1,9 +1,11 @@
 import pygame as pg
+import numpy as np
 
 from rendering.camera import Camera
 from rendering.projection import Projection
 from rendering.transformations import *
 from rendering.zbuffer import Polygon, pixel_color
+from rendering.config import W_WIDTH, W_HEIGHT
 
 
 class Scene:
@@ -40,18 +42,21 @@ class Scene:
         projection = Projection(self.camera)
 
         vertices = self.vertices @ self.camera.matrix()
+        z_values = vertices[:, 2].copy()
         vertices = vertices @ projection.projection_matrix
         vertices[:, -1] = np.where(vertices[:, -1] == 0, 1, vertices[:, -1])
         vertices /= vertices[:, -1].reshape(-1, 1)
         vertices = vertices @ projection.scaling_matrix
-        # vertices[:, 2] = z_values
+        vertices[:, 2] = z_values
 
         polygons = []
         for face in self.faces:
             polygons.append(Polygon(face, vertices[face]))
 
         y_min, y_max = int(np.floor(np.min(vertices[:, 1]))), int(np.ceil(np.max(vertices[:, 1])))
+        y_min, y_max = max(y_min, 0), min(y_max, W_HEIGHT - 1)
         x_min, x_max = int(np.floor(np.min(vertices[:, 0]))), int(np.ceil(np.max(vertices[:, 0])))
+        x_min, x_max = max(x_min, 0), min(x_max, W_WIDTH - 1)
         for i in range(x_min, x_max + 1):
             for j in range(y_min, y_max + 1):
                 pg.draw.circle(window, pixel_color(i, j, polygons), (i, j), 1)
